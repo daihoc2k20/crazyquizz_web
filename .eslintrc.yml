@@ -1,0 +1,64 @@
+env:
+  browser: true
+  es2021: true
+  node: true
+extends:
+  - eslint:recommended
+  - plugin:react/recommended
+  - plugin:react/jsx-runtime
+  - plugin:import/recommended
+  - plugin:import/typescript
+  - plugin:@typescript-eslint/recommended
+  - plugin:react-hooks/recommended
+  # - plugin:jsx-a11y/recommended
+parser: "@typescript-eslint/parser"
+parserOptions:
+  tsconfigRootDir: .
+  project:
+    - ./tsconfig.eslint.json
+    - ./packages/landing/tsconfig.json
+plugins:
+  - react
+  - react-hooks
+  - "@typescript-eslint"
+  # - jsx-a11y
+settings:
+  react:
+    version: detect
+  import/resolver:
+    typescript:
+      project: packages/*/tsconfig.json
+rules:
+  # '@typescript-eslint/semi': [error, always]
+  react/jsx-indent: [error, 2]
+  react/self-closing-comp: error
+  no-unused-vars: 0
+  "@typescript-eslint/no-explicit-any": warn
+  "@typescript-eslint/no-unused-vars": error
+  import/newline-after-import: error
+  import/order:
+    [
+      error,
+      {
+        groups: [[builtin, external], [internal], [parent, sibling], unknown],
+        pathGroups: [{ pattern: "assets/**", group: unknown }],
+        newlines-between: always,
+      },
+    ]
+  # import/no-cycle: [error, { ignoreExternal: true }]
+  # '@typescript-eslint/no-misused-promises': [error, { checksVoidReturn: false }]
+  # '@typescript-eslint/no-unnecessary-condition': error
+
+  # the rules used to support code reviewing
+  react/jsx-curly-brace-presence: [error, never]
+  arrow-body-style: [error, as-needed]
+  padding-line-between-statements:
+    - error
+    # - { blankLine: 'always', prev: '*', next: 'return' }
+    - { blankLine: "always", prev: "*", next: "function" }
+    - { blankLine: "always", prev: "function", next: "*" }
+    - {
+        blankLine: "always",
+        prev: ["multiline-const", "multiline-block-like"],
+        next: ["export", "return", "multiline-block-like"],
+      }
