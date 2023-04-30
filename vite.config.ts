@@ -4,8 +4,8 @@ import react from "@vitejs/plugin-react";
 const LoginHtmlFallbackPlugin = {
   name: "login-html-fallback",
   configureServer(server: ViteDevServer) {
-    server.middlewares.use("/quizz_web", (req, res, next) => {
-      req.originalUrl += "/";
+    server.middlewares.use((req, res, next) => {
+      req.url = req.url.replace("/quizz_web", "/");
       next();
     });
   },
