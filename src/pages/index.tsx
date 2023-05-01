@@ -78,6 +78,7 @@ export function Home() {
       <div>
         {test && Array.isArray(test?.questionIDs) && (
           <Exam
+            userId={user?.id ?? ""}
             topicId={test.topicID}
             testId={test.id}
             questionIDs={test.questionIDs}

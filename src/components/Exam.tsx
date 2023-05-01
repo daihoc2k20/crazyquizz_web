@@ -19,6 +19,7 @@ import { HistoryModelUpdate } from "../models/user";
 import { Timer } from "./Timer";
 import { Timestamp } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { updateUserTopic } from "../lib/updateUserTopic";
 
 export function Exam({
   topicId,
@@ -27,7 +28,9 @@ export function Exam({
   update,
   time,
   testId,
+  userId,
 }: {
+  userId: string;
   topicId: string;
   testId: string;
   questionIDs: string[];
@@ -61,10 +64,13 @@ export function Exam({
 
   async function submit(currentTime?: Timestamp) {
     if (Array.isArray(questions) && questions.length > 0) {
+      const list: string[] = [];
       const score = questions.reduce((prev, current, index) => {
         if (current.answer == userAnswers[index]) {
+          list.push(current.id);
           return prev + 1;
         }
+
         return prev;
       }, 0);
 
@@ -82,6 +88,7 @@ export function Exam({
           submited: true,
         });
       }
+      await updateUserTopic(userId, topicId, list);
       navigator(`/complete/${testId}`);
       setIsSubmiting(false);
     }

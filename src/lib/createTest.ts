@@ -12,6 +12,7 @@ import {
 import { FireCollections } from "../firebase/collections";
 import { firestore } from "../firebase";
 import { UserTopicModel, createHistory } from "../models/user";
+import { randomList } from "./randomList";
 
 export async function creatTest(
   userId: string,
@@ -42,12 +43,15 @@ export async function creatTest(
         questionsCollection,
         ...(excludeQuestions.length > 0
           ? [where("id", "not-in", excludeQuestions)]
-          : []),
-        queryLimit(limit)
+          : [])
       );
 
-      const questions = (await getDocs(getQuestionsQuery)).docs.map(
+      const allQuestions = (await getDocs(getQuestionsQuery)).docs.map(
         (item) => item.id
+      );
+
+      const questions = randomList(limit, allQuestions.length).map(
+        (index) => allQuestions[index]
       );
 
       const newTest = createHistory(userId, topicId, questions);
