@@ -4,7 +4,7 @@ import { useUser } from "../hooks/useUser";
 import { useEffect, useMemo, useState } from "react";
 import { IoPlay } from "react-icons/io5";
 import { useTest } from "../hooks/useTest";
-import { Exam } from "../components/Question";
+import { Exam } from "../components/Exam";
 
 export function Home() {
   const [selectedTopic, setSelectedTopic] = useState("");
@@ -79,9 +79,14 @@ export function Home() {
         {test && Array.isArray(test?.questionIDs) && (
           <Exam
             topicId={test.topicID}
+            testId={test.id}
             questionIDs={test.questionIDs}
             userAnswers={test.userAnswers}
             update={updateTest}
+            time={{
+              from: test.createdAt,
+              to: test.endedAt,
+            }}
           />
         )}
       </div>

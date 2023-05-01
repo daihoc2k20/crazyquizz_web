@@ -4,6 +4,7 @@ import { creatTest } from "../lib/createTest";
 import {
   CollectionReference,
   Timestamp,
+  and,
   collection,
   doc,
   getDoc,
@@ -22,6 +23,10 @@ type UseTest = {
   update: (history: Partial<HistoryModelUpdate>) => Promise<void>;
 };
 
+type UseLatestTest = {
+  test: HistoryModel | undefined;
+};
+
 export function useTest(userId?: string): UseTest {
   const [test, setTest] = useState<HistoryModel>();
 
@@ -34,7 +39,7 @@ export function useTest(userId?: string): UseTest {
 
       const topicsQuery = query(
         topicRef,
-        where("endedAt", ">=", Timestamp.now()),
+        and(where("endedAt", ">=", Timestamp.now())),
         limit(1)
       );
 
@@ -75,5 +80,36 @@ export function useTest(userId?: string): UseTest {
     test,
     create,
     update,
+  };
+}
+
+export function useLatestTest(userId: string, testId: string): UseLatestTest {
+  const [test, setTest] = useState<HistoryModel>();
+
+  useEffect(() => {
+    if (userId) {
+      const topicRef = collection(
+        firestore,
+        FireCollections.userHistories(userId)
+      ) as CollectionReference<HistoryModel>;
+
+      const topicsQuery = doc(topicRef, testId);
+
+      const unListen = onSnapshot(topicsQuery, (topicsCollection) => {
+        if (!topicsCollection.exists()) {
+          setTest(undefined);
+        } else {
+          setTest(topicsCollection.data());
+        }
+      });
+
+      return () => {
+        unListen();
+      };
+    }
+  }, [userId, testId]);
+
+  return {
+    test,
   };
 }

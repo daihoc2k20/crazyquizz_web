@@ -6,6 +6,8 @@ import { Button } from "@chakra-ui/react";
 import { signInWithPopup } from "firebase/auth";
 import { authProvider, fireauth } from "./firebase";
 import { Home } from "./pages";
+import { Route, Routes } from "react-router-dom";
+import { Complete } from "./pages/complete";
 
 function App() {
   const [auth, loading] = useAuth();
@@ -41,7 +43,17 @@ function App() {
             </div>
           }
         >
-          <Home />
+          <Routes>
+            <Route path="/" element={<Home />}></Route>
+            <Route
+              path="/complete/:testid"
+              element={
+                <>
+                  <Complete />
+                </>
+              }
+            ></Route>
+          </Routes>
         </Builder>
       </Builder>
     </>

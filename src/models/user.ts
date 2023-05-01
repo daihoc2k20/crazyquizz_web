@@ -24,6 +24,7 @@ export interface HistoryModel {
   questionIDs: string[];
   userAnswers: string[];
   score?: number;
+  submited: boolean;
   createdAt: Timestamp;
   endedAt: Timestamp;
 }
@@ -32,6 +33,7 @@ export interface HistoryModelUpdate {
   userAnswers: string[];
   score?: number;
   endedAt: Timestamp;
+  submited: boolean;
 }
 
 export interface UserTopicModel {
@@ -65,6 +67,7 @@ export function createHistory(
     topicID: topicId,
     questionIDs: questions,
     userAnswers: [],
+    submited: false,
     endedAt: endtime,
     createdAt: now,
   };
